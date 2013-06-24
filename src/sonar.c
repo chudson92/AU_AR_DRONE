@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -53,12 +55,12 @@ int ECHO_PIN[5] = { 18, 17, 27, 22, 23 };
    pinMode(TRIGGER_PIN[3], INPUT);
    pinMode(TRIGGER_PIN[4], OUTPUT);
    pinMode(TRIGGER_PIN[4], INPUT);
-   printf("testing...\n");
+
    int pulsewidth;
 
    if (wiringPiSetupGpio () == -1)
    {
-    printf("testingerror...\n");
+
       fprintf (stderr, "Can't initialise wiringPi: %s\n", strerror (errno)) ;
       return 1 ;
    }
@@ -107,5 +109,6 @@ int ECHO_PIN[5] = { 18, 17, 27, 22, 23 };
 
  break;
 }
+
    return 1;
 }

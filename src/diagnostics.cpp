@@ -1,44 +1,63 @@
-//============================================================================
-// Name        : AU_AR_DRONE.cpp
-// Author      :
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
 #include <iostream>
+#include "XbeeIO.h"
+#include <string.h>
 
 extern "C" {
 #include "sonar.h"
 }
 
 
-
-int diagnostics() {
-
-
-	//Initialize sensors -> where am i? _> if top blocked refuse launch
-	// Check Xbee link to laptop
-	//Check Node.js running -> if not launch
-	//get navdata
-	//check battery -> return battery %
-
-
+using namespace std;
+bool sonarInit() {
 
 	std::cout << "Initializing Sonar..." << std::endl;
 	sleep(2);
 	int dist = ping();
 
 	//1.5m clearance (59 inches) drone flies at 1m
-	if(dist >= 8673){
+	if (dist >= 8673) {
 		std::cout << "Sonar Initialized" << std::endl;
-		std::cout << dist/147 << " inch clearance " << std::endl;
+		std::cout << dist / 147 << " inch clearance " << std::endl;
+		return true;
+	} else {
+		std::cout << " low clearance ... takeoff blocked " << std::endl;
+		return false;
 	}
-	else{
-		std::cout <<  " low clearance ... takeoff blocked " << std::endl;
-	}
-
-
-
-	return 0;
 }
+
+bool xbeeInit() {
+	char* xinit = "init";
+
+	std::cout << "Initializing Xbee..." << std::endl;
+	sleep(2);
+	std::cout << "Run Initialize on Ground Station please" << std::endl;
+
+
+	char* message = receive();
+
+	if (strcmp(xinit,message) == 0)
+		return true;
+	else
+		return false;
+}
+
+bool diagnostics() {
+
+	bool sonarCheck = sonarInit();
+	bool xbeeCheck = xbeeInit();
+
+	if (sonarCheck) {
+		cout << "Sonar............. Good" << endl;
+		if (xbeeCheck) {
+			cout << "Xbee............. Good" << endl;
+		}
+
+	} else
+		return false;
+
+	//Check Node.js running -> if not launch
+	//get navdata
+	//check battery -> return battery %
+
+}
+
