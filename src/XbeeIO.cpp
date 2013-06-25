@@ -198,15 +198,13 @@ bool close_port(int fd) {
 	return true;
 }
 
-char* receive() {
-
+void receive(char* str, int messageLength) {
 
 	if (verbose) {
 		int j;
 		for (j = 0; j < 256; j++)
 			myMessages[j] = 0;
 	}
-
 
 // SETUP SERIAL PORT
 
@@ -257,62 +255,32 @@ char* receive() {
 	}
 
 // Ready to roll
-	//printf(
-		//	"\nMAVLINK SERIAL TO ROS BRIDGE STARTED ON MAV %d (COMPONENT ID:%d) - RUNNING..\n\n",
-		//	sysid, compid);
 
 // Send message over serial port
-		//static uint8_t buffer[8];
-		//int messageLength = 2;
-		//if (debug) printf("Writing %d bytes\n", messageLength);
-		//write(fd, (char*)buffer, messageLength);
-		//tcflush(fd, TCOFLUSH);
-		//if (messageLength != written) fprintf(stderr, "ERROR: Wrote %d bytes but should have written %d\n", written, messageLength);
 
-// DEBUG - for testing XBEE serial comm in X-CTU
-	
-	 
-//	 static uint8_t buf[10];
-//	 int messageLength = 10;
-//	 printf("Writing %d bytes\n", messageLength);
-	 
-//	 buf[0] = 'A';
-// buf[1] = 'B';
-//buf[2] = 'C';
-// buf[3] = 'D';
-// buf[4] = 'E';
-// buf[5] = 'F';
-// buf[6] = 'G';
-// buf[7] = 'H';
-// buf[8] = 'I';
-// buf[9] = 'J';
-//	 int test = write(fd, (char*)buf, messageLength);
-//	 tcflush(fd, TCOFLUSH);
-//	 if (messageLength != test) fprintf(stderr, "ERROR: Wrote %d bytes but should have written %d\n", test, messageLength);
-	 
-	 
 
-	/**
-	 * Now pump callbacks (execute mavlinkCallback) until CTRL-c is pressed
-	 */
-	int i;
+	int i = 0;
 	char* ptr;
-	char str[5];
+
 	ptr = str;
-	str[4] = '\0';
-string mystring = string("");
-	while(i < 4){
-//	uint8_t buffer[10];
-	
-	if (read(fd, ptr, 1) > 0) {
-	
-	ptr++;
-	i++;
-}
+	str[messageLength] = '\0';
+	while (1) {
+
+
+		if (read(fd, ptr, 1) > 0) {
+			ptr++;
+			i++;
+		}
+		if (i == messageLength) {
+			break;
+		}
+
 	}
+
+	cout << "Printing from XbeeIO's receive()..." << endl;
 	cout << str << endl;
+	flush(cout);
 	close_port(fd);
 
-	return str;
 }
 

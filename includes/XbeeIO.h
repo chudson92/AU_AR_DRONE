@@ -8,6 +8,6 @@
 #ifndef XBEEIO_H_
 #define XBEEIO_H_
 
-char* receive();
+void receive(char* str, int messageLength);
 
 #endif /* XBEEIO_H_ */

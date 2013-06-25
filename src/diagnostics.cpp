@@ -1,6 +1,7 @@
 #include <iostream>
 #include "XbeeIO.h"
 #include <string.h>
+#include <cstdio>
 
 extern "C" {
 #include "sonar.h"
@@ -26,15 +27,17 @@ bool sonarInit() {
 }
 
 bool xbeeInit() {
-	char* xinit = "init";
+	 const char* xinit = "init";
 
 	std::cout << "Initializing Xbee..." << std::endl;
 	sleep(2);
 	std::cout << "Run Initialize on Ground Station please" << std::endl;
 
 
-	char* message = receive();
-
+	char message[5];
+	receive(message, 4);
+	cout << "message recieved:" << message << endl;
+	cout << "strcmp returns... " << strcmp(xinit,message) << endl;
 	if (strcmp(xinit,message) == 0)
 		return true;
 	else
@@ -48,9 +51,10 @@ bool diagnostics() {
 
 	if (sonarCheck) {
 		cout << "Sonar............. Good" << endl;
-		if (xbeeCheck) {
-			cout << "Xbee............. Good" << endl;
+
 		}
+	if (xbeeCheck) {
+		cout << "Xbee............. Good" << endl;
 
 	} else
 		return false;
