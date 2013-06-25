@@ -14,7 +14,7 @@ using namespace std;
 bool sonarInit() {
 
 	std::cout << "Initializing Sonar..." << std::endl;
-	sleep(2);
+
 	int dist = ping();
 
 	//1.5m clearance (59 inches) drone flies at 1m
@@ -23,7 +23,7 @@ bool sonarInit() {
 		std::cout << dist / 147 << " inch clearance " << std::endl;
 		return true;
 	} else {
-		std::cout << " low clearance ... takeoff blocked " << std::endl;
+		std::cout << " Low clearance ... Takeoff blocked " << std::endl;
 		return false;
 	}
 }
@@ -32,7 +32,6 @@ bool xbeeInit() {
 	const char* xinit = "init";
 
 	std::cout << "Initializing Xbee..." << std::endl;
-
 
 	std::cout << "Run Initialize on Ground Station please" << std::endl;
 
@@ -53,44 +52,66 @@ bool nodeInit() {
 	char messageBack[17];
 	cmd(messageBack);
 
-	cout << "message recieved in diagnostics: \n" << messageBack << endl;
-	 string str(messageBack);
+	//cout << "message recieved in diagnostics: \n" << messageBack << endl;
+	string str(messageBack);
 
-	 //cout << "conversted to str: " << str << endl;
-	 //str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+	//cout << "conversted to str: " << str << endl;
+	//str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
 	// cout << "/n removed to str: " << str << endl;
 
+
 	if (strcmp(messageBack, battery) == 0) {
+		str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), 'd'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), 'r'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), 'o'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), 'n'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), 'e'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), '>'), str.end());
+
+		cout << "battery life: " << str << endl;
+
 		return true;
 	} else {
 		return false;
 	}
-
 
 }
 
 bool diagnostics() {
 
 	bool sonarCheck = sonarInit();
-	bool xbeeCheck = xbeeInit();
-	bool nodeCheck = nodeInit();
-
 	if (sonarCheck) {
 		cout << "Sonar............. Good" << endl;
 
+	} else {
+		cout << "Sonar initialization FAILED" << endl;
+		exit(EXIT_FAILURE);
 	}
+
+	bool xbeeCheck = xbeeInit();
 	if (xbeeCheck) {
 		cout << "Xbee............. Good" << endl;
 
+	} else {
+		cout << "Xbee initialization FAILED" << endl;
+		exit(EXIT_FAILURE);
 	}
+
+	bool nodeCheck = nodeInit();
+
 	if (nodeCheck) {
 		cout << "Node.js............. Good" << endl;
 
-	} else
-		return false;
+	} else{
+		cout << "Node.js initialization FAILED" << endl;
+		exit(EXIT_FAILURE);
+	}
 
 //get navdata
 //check battery -> return battery %
-
+	cout << "Diagnostics complete clear to launch()" << endl;
+return true;
+	//exit(EXIT_FAILURE);
 }
 

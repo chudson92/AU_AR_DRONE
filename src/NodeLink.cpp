@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string>
 #include <signal.h>
 #include <string>
 #include <string.h>
@@ -85,7 +85,7 @@ void cmd(char* messageBack) {
 		//sleep(10);
 		//write(myPipe[1], message2, strlen(message2)); //write takes a c string, which is a char array
 		//char messageBack[15];
-		std::cout << message3 << std::endl;
+		//std::cout << message3 << std::endl;
 		write(myPipe[1], message3, strlen(message3));
 		//std::cout << "hello" << std::endl;
 		//sleep(5);
@@ -104,7 +104,7 @@ void cmd(char* messageBack) {
 				i++;
 			}
 			if (i == 17) {
-
+				 kill(pid+2, SIGKILL);
 				break;
 			}
 
@@ -113,6 +113,7 @@ void cmd(char* messageBack) {
 	}
 		//std::cout << "message end of nodelink.cpp" << messageBack << std::endl;
 	}
-	std::cout << "PID = " << pid << std::endl;
-	kill(pid+2, SIGKILL);
+
+	//std::cout << "PID = " << pid << std::endl;
+
 }

@@ -246,6 +246,7 @@ void receive(char* str, int messageLength) {
 			fprintf(stderr,
 					"\nConnected to %s with %d baud, 8 data bits, no parity, 1 stop bit (8N1)\n",
 					port.c_str(), baud);
+
 	}
 
 // FIXME ADD MORE CONNECTION ATTEMPTS
@@ -264,8 +265,9 @@ void receive(char* str, int messageLength) {
 
 	ptr = str;
 	str[messageLength] = '\0';
-	while (1) {
 
+	std::cout << "Run Initialize on Ground Station please" << std::endl;
+	while (1) {
 
 		if (read(fd, ptr, 1) > 0) {
 			ptr++;
@@ -277,8 +279,8 @@ void receive(char* str, int messageLength) {
 
 	}
 
-	cout << "Printing from XbeeIO's receive()..." << endl;
-	cout << str << endl;
+	//cout << "Printing from XbeeIO's receive()..." << endl;
+	//cout << str << endl;
 	flush(cout);
 	close_port(fd);
 

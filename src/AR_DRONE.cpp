@@ -14,9 +14,16 @@
 
 
 int main(){
-	diagnostics();								//launch diagnostics
+	bool dia = diagnostics();								//launch diagnostics
 
+	//if diagnostics return true launch
 
+	if(dia){
+		std::cout<< "launch?" <<std::endl;
+
+	}
+	else
+		exit(EXIT_FAILURE);
 }
 
 
