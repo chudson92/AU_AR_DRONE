@@ -2,11 +2,13 @@
 #include "XbeeIO.h"
 #include <string.h>
 #include <cstdio>
+#include "nodelink.h"
+#include <string>
+#include <algorithm>
 
 extern "C" {
 #include "sonar.h"
 }
-
 
 using namespace std;
 bool sonarInit() {
@@ -27,41 +29,68 @@ bool sonarInit() {
 }
 
 bool xbeeInit() {
-	 const char* xinit = "init";
+	const char* xinit = "init";
 
 	std::cout << "Initializing Xbee..." << std::endl;
-	sleep(2);
-	std::cout << "Run Initialize on Ground Station please" << std::endl;
 
+
+	std::cout << "Run Initialize on Ground Station please" << std::endl;
 
 	char message[5];
 	receive(message, 4);
-	cout << "message recieved:" << message << endl;
-	cout << "strcmp returns... " << strcmp(xinit,message) << endl;
-	if (strcmp(xinit,message) == 0)
+//	cout << "message recieved:" << message << endl;
+	//cout << "strcmp returns... " << strcmp(xinit, message) << endl;
+	if (strcmp(xinit, message) == 0)
 		return true;
 	else
 		return false;
+}
+
+bool nodeInit() {
+	//Check Node.js running -> if not launch
+	const char* battery = "drone> 100\ndrone>";
+
+	char messageBack[17];
+	cmd(messageBack);
+
+	cout << "message recieved in diagnostics: \n" << messageBack << endl;
+	 string str(messageBack);
+
+	 //cout << "conversted to str: " << str << endl;
+	 //str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+	// cout << "/n removed to str: " << str << endl;
+
+	if (strcmp(messageBack, battery) == 0) {
+		return true;
+	} else {
+		return false;
+	}
+
+
 }
 
 bool diagnostics() {
 
 	bool sonarCheck = sonarInit();
 	bool xbeeCheck = xbeeInit();
+	bool nodeCheck = nodeInit();
 
 	if (sonarCheck) {
 		cout << "Sonar............. Good" << endl;
 
-		}
+	}
 	if (xbeeCheck) {
 		cout << "Xbee............. Good" << endl;
+
+	}
+	if (nodeCheck) {
+		cout << "Node.js............. Good" << endl;
 
 	} else
 		return false;
 
-	//Check Node.js running -> if not launch
-	//get navdata
-	//check battery -> return battery %
+//get navdata
+//check battery -> return battery %
 
 }
 
