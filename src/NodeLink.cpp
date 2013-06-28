@@ -10,16 +10,25 @@
 #include "xbee.h"
 #include <unistd.h>								//this is what you need for fork, pipe, exec
 #include "diagnostics.h"
+using namespace std;
 
-void cmd(char* messageBack) {
+void writeMsg(char* messageSend);
+void readMsg(char* messageBack);
+void readback(char* messageBack);
+
+int myPipe[2];
+int myPipe2[2];
+int pid;
+
+void cmd(char* messageSend, char* messageBack) {
 //try to create our pipe for use later
-	int myPipe[2];
+
+	std::cout << "msg in cmd: " << messageSend << std::endl;
 	if (pipe(myPipe) == -1) {
 		perror("Pipe");
 		exit(1);
 	}
 
-	int myPipe2[2];
 	if (pipe(myPipe2) == -1) {
 		perror("Pipe");
 		exit(1);
@@ -30,21 +39,21 @@ void cmd(char* messageBack) {
 	char *message2 = "land()\n";
 	char *message3 = "battery()\n";
 
-
 	//construct our strings to send
 	//std::string myStr = std::string("hello");
 
 	//fork our process
-	int pid;
+
 	pid = fork();
 
 	if (pid == 0) //this is the child process
 			{
+
 		//we're redirecting STDIN such that it comes from the pipe
 		//close standard in
-		close (STDIN_FILENO);
-		close (STDOUT_FILENO);
-
+		close(STDIN_FILENO);
+		close(STDOUT_FILENO);
+		//std::cout << "INSIDE CHILD PROCESS" << std::endl;
 		close(myPipe[1]); //close end of pipe your not using
 		close(myPipe2[0]);
 
@@ -55,65 +64,63 @@ void cmd(char* messageBack) {
 		//change path
 		chdir("/home/pi/Node_ws");
 
+		//std::cout << "LAUNCHing NODE.JS" << std::endl;
 		//run new program
-		system("node repl.js");
-
-		//you would probably want to use one form of exec instead of system here.
-		//exec executes a binary, so you just give it the path to the binary
-
-		//http://www.gnu.org/software/libc/manual/html_node/Executing-a-File.html#Executing-a-File
-
-		//char *argv[1];
-		//char *message2 = "hello";
-		//argv[0] = binName;
-		//argv[1] = message2;
-		//execvp("echo",argv);
+		system("node repl.js\n");
+		//std::cout << "LAUNCHED NODE.JS" << std::endl;
 
 	} else //the parent process
 	{
 
+		//system(" ps -ef | grep -w 'node repl.js' | cut -c10-15 | tail -2 | head -1");
+
 		close(myPipe[0]); //close end of pipe your not using
 		close(myPipe2[1]);
-		//now when ever you write to myPipe[0] in the parent, the child
-		//treats it like standard in, which is the same as typing in the terminal.
 
-		//if you are having trouble with multiple writes, you may need to
-		//add a newline to the end of each command
-
-		//send out output over that there pipe
-		//write(myPipe[1], message, strlen(message)); //write takes a c string, which is a char array
-		//sleep(10);
-		//write(myPipe[1], message2, strlen(message2)); //write takes a c string, which is a char array
-		//char messageBack[15];
-		//std::cout << message3 << std::endl;
-		write(myPipe[1], message3, strlen(message3));
-		//std::cout << "hello" << std::endl;
-		//sleep(5);
-		//read(myPipe2[0], messageBack, 15 );
-	//	int
-		int i = 0;
-		char* ptr;
-
-		ptr = messageBack;
-		messageBack[17] = '\0';
-		while (1) {
-
-
-			if (read(myPipe2[0], ptr, 1) > 0) {
-				ptr++;
-				i++;
-			}
-			if (i == 17) {
-				 kill(pid+2, SIGKILL);
-				break;
-			}
-
-
+		//char killmessage[2]; killmessage[0] = 3; killmessage[1] = 3;
+		//write(myPipe[1], killmessage, 2);
+		//writeMsg(messageSend);
+		//sleep(2);
+		//readMsg(messageBack);
+		//write(myPipe[1], messageSend, strlen(messageSend));
+		writeMsg(messageSend);
+		readMsg(messageBack);
 
 	}
-		//std::cout << "message end of nodelink.cpp" << messageBack << std::endl;
-	}
+}
 
-	//std::cout << "PID = " << pid << std::endl;
+void writeMsg(char* messageSent) {
+	cout << "SENDING MESSAGE " << messageSent << " INSIDE writeMsg" << endl;
+	write(myPipe[1], messageSent, strlen(messageSent));
+	return;
 
 }
+
+void readMsg(char* msgBack) {
+	cout << "INSIDE READ MESSAGE" << endl;
+
+
+	int i = 0;
+	msgBack;
+	char* ptr;
+
+	ptr = msgBack;
+	msgBack[18] = '\0';
+	while (1) {
+
+		if (read(myPipe2[0], ptr, 1) > 0) {
+			cout << ptr << endl;
+			ptr++;
+			i++;
+		}
+		if (i == 8) {
+			//kill(pid+2, SIGKILL);
+			break;
+
+		}
+		cout << "FAILED TO BREAK OUT OF WHILE LOOP" << endl;
+	}
+	cout << " OUT OF WHILE LOOP" << endl;
+	return;
+}
+

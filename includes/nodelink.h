@@ -8,6 +8,8 @@
 #ifndef NODELINK_H_
 #define NODELINK_H_
 
-void cmd(char* str);
+void cmd(char* msg, char* str);
+void writeMsg(char* messageSend);
+void readMsg(char* messageBack);
 
 #endif /* NODELINK_H_ */

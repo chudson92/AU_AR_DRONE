@@ -15,6 +15,7 @@
 #include <termios.h> /* POSIX terminal control definitions */
 #ifdef __linux
 #include <sys/ioctl.h>
+#include <termios.h>
 #endif
 
 using std::string;
@@ -259,7 +260,6 @@ void receive(char* str, int messageLength) {
 
 // Send message over serial port
 
-
 	int i = 0;
 	char* ptr;
 
@@ -286,3 +286,103 @@ void receive(char* str, int messageLength) {
 
 }
 
+void send(char* message) {
+	char* buf = message;
+	 int messageLength = sizeof(buf);
+	 cout << buf << endl;
+	 int test = write(fd, buf, messageLength);
+	 tcflush(fd, TCOFLUSH);
+	 //if (messageLength != test) fprintf(stderr, "ERROR: Wrote %d bytes in send(char* message) but should have written %d\n", test, messageLength);
+
+}
+
+void receiveQuick(char* str, int messageLength) {
+
+	if (verbose) {
+		int j;
+		for (j = 0; j < 256; j++)
+			myMessages[j] = 0;
+	}
+
+// SETUP SERIAL PORT
+
+// Exit if opening port failed
+// Open the serial port.
+	if (!silent)
+		printf("Trying to connect to %s.. ", port.c_str());
+	fd = open_port(port);
+	if (fd == -1) {
+		if (!silent)
+			fprintf(stderr, "failure, could not open port.\n");
+		exit(EXIT_FAILURE);
+	} else {
+		if (!silent)
+			printf("success.\n");
+	}
+	if (!silent)
+		printf("Trying to configure %s.. ", port.c_str());
+	bool setup = setup_port(fd, baud, 8, 1, false, false);
+	if (!setup) {
+		if (!silent)
+			fprintf(stderr, "failure, could not configure port.\n");
+		exit(EXIT_FAILURE);
+	} else {
+		if (!silent)
+			printf("success.\n");
+	}
+	int* fd_ptr = &fd;
+
+	int noErrors = 0;
+	if (fd == -1 || fd == 0) {
+		if (!silent)
+			fprintf(stderr,
+					"Connection attempt to port %s with %d baud, 8N1 failed, exiting.\n",
+					port.c_str(), baud);
+		exit(EXIT_FAILURE);
+	} else {
+		if (!silent)
+			fprintf(stderr,
+					"\nConnected to %s with %d baud, 8 data bits, no parity, 1 stop bit (8N1)\n",
+					port.c_str(), baud);
+
+	}
+
+// FIXME ADD MORE CONNECTION ATTEMPTS
+
+	if (fd == -1 || fd == 0) {
+		exit(noErrors);
+	}
+
+// Ready to roll
+
+// Send message over serial port
+
+	int i = 0;
+	char* ptr;
+
+	ptr = str;
+	str[messageLength] = '\0';
+
+	//std::cout << "Run Initialize on Ground Station please" << std::endl;
+	struct termios  config;
+	config.c_cc[VMIN]  = 0;
+	config.c_cc[VTIME] = 10;
+	while (1) {
+
+		int timeout = 250;
+		if (read(fd, ptr, 1) > 0) {
+			ptr++;
+			i++;
+		}
+		if (i == messageLength) {
+			break;
+		}
+
+	}
+
+	//cout << "Printing from XbeeIO's receive()..." << endl;
+	//cout << str << endl;
+	flush(cout);
+	close_port(fd);
+
+}

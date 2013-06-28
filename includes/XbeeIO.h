@@ -9,5 +9,5 @@
 #define XBEEIO_H_
 
 void receive(char* str, int messageLength);
-
+void send(char* str);
 #endif /* XBEEIO_H_ */
