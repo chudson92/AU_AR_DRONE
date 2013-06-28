@@ -8,7 +8,6 @@
 #ifndef DIAGNOSTICS_H_
 #define DIAGNOSTICS_H_
 
-#include <iostream>
 
 #include "sonar.h"
 

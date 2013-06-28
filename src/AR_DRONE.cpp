@@ -15,6 +15,8 @@
 #include <string>
 #include <algorithm>
 #include "Controler.h"
+#include <iostream>     // std::cout
+#include <fstream>      // std::ifstream
 
 using namespace std;
 
@@ -37,11 +39,11 @@ void launchit() {
 
 void nodekill(){
 	system(" ps -ef | grep -w 'node repl.js' | cut -c10-15 | tail -2 | head -1 > PID.txt");
-	ifstream pid;
-	pid.open("PID.txt");
+	ifstream pids;
+	pids.open("PID.txt");
 	int temp;
-	pid>>temp;
-	pid.close();
+	pids>>temp;
+	pids.close();
 	kill(temp, SIGKILL);
 
 }

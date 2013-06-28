@@ -16,18 +16,22 @@ extern "C" {
 void controller() {
 
 	bool autonomous;
+	int topSensor[11];
+	int frontSensor[11];
+	int leftSensor[11];
+	int rightSensor[11];
+	int backSensor[11];
 	while (autonomous == true) {
+
 		char* str;
 		receive(str, 4);
-		int scans[5];
-		//goscan(1,scans); //scan 1 time
-		scans[0] = 1; //top
-		scans[1] = 2; //front
-		scans[2] = 3; //left
-		scans[3] = 4; //right
-		scans[4] = 5; //back
+		int scanTimes = 11;
 
-		if (scans[0] <= 3528) { //if closer then 2 ft above
+
+
+		scanSensors(scanTimes, topSensor, frontSensor, leftSensor, rightSensor, backSensor);
+
+		if (topSensor[5] <= 3528) { //if closer then 2 ft above
 			stop();
 			down();
 			sleep(1);
@@ -36,28 +40,28 @@ void controller() {
 		}
 
 		//TODO: Implement a protocal for going around
-		if (scans[1] <= 3528) { //if closer then 2 ft front
+		if (frontSensor[5] <= 3528) { //if closer then 2 ft front
 			stop();
 			back();
 			sleep(1);
 			stop();
 
 		}
-		if (scans[2] <= 3528) { //if closer then 2 ft left
+		if (leftSensor[5] <= 3528) { //if closer then 2 ft left
 			stop();
 			right();
 			sleep(1);
 			stop();
 
 		}
-		if (scans[3] <= 3528) { //if closer then 2 ft right
+		if (rightSensor[5] <= 3528) { //if closer then 2 ft right
 			stop();
 			left();
 			sleep(1);
 			stop();
 
 		}
-		if (scans[4] <= 3528) { //if closer then 2 ft back
+		if (backSensor[5] <= 3528) { //if closer then 2 ft back
 			stop();
 			forward();
 			sleep(1);

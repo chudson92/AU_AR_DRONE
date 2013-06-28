@@ -12,8 +12,7 @@
 extern "C" {
 #endif
 int waitforpin(int pin, int level, int timeout);
-int scan(int scans, int returns[]);
-void goscan(int scans, int returns[]);
+void scanSensors(int scanTimes, int topSensor[], int frontSensor[], int leftSensor[], int rightSensor[], int backSensor[]);
 
 #ifdef __cplusplus
 }
