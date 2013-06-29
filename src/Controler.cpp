@@ -4,72 +4,80 @@
  *  Created on: Jun 27, 2013
  *      Author: chris
  */
-
+#include <iostream>
 #include "Controler.h"
 #include "Controls.h"
 #include "XbeeIO.h"
 #include <unistd.h>
 extern "C" {
 #include "scanner.h"
+
 }
 
+using namespace std;
+
 void controller() {
+	//cout << " IN THE CONTROLLER " << endl;
+	bool autonomous = true;
+	int topSensor[5];
+	int frontSensor[5];
+	int leftSensor[5];
+	int rightSensor[5];
+	int backSensor[5];
 
-	bool autonomous;
-	int topSensor[11];
-	int frontSensor[11];
-	int leftSensor[11];
-	int rightSensor[11];
-	int backSensor[11];
-	while (autonomous == true) {
+	takeoff();
+	sleep(10);
+	land();
 
-		char* str;
-		receive(str, 4);
-		int scanTimes = 11;
+	//while (autonomous == true) {
+		//cout << "IN WHILE LOOP" << endl;
+		//char* str;
+		//receive(str, 4);
+		//cout << " AFTER RECIEVE " << endl;
+		//int scanTimes = 5;
 
+		//std::cout << "After SCANTIMES" << std::endl;
 
+		/*scanSensors(scanTimes, topSensor, frontSensor, leftSensor, rightSensor, backSensor);
+		//cout << topSensor[5] << endl;
 
-		scanSensors(scanTimes, topSensor, frontSensor, leftSensor, rightSensor, backSensor);
-
-		if (topSensor[5] <= 3528) { //if closer then 2 ft above
+		if (topSensor[2] <= 3528) { //if closer then 2 ft above
 			stop();
 			down();
-			sleep(1);
 			stop();
 
 		}
 
 		//TODO: Implement a protocal for going around
-		if (frontSensor[5] <= 3528) { //if closer then 2 ft front
+		if (frontSensor[2] <= 5292) { //if closer then 2 ft front
 			stop();
 			back();
-			sleep(1);
 			stop();
+			sleep(3);
+			land();
 
 		}
-		if (leftSensor[5] <= 3528) { //if closer then 2 ft left
+		if (leftSensor[2] <= 100) { //if closer then 2 ft left
 			stop();
 			right();
-			sleep(1);
 			stop();
 
 		}
-		if (rightSensor[5] <= 3528) { //if closer then 2 ft right
+		if (rightSensor[2] <= 100) { //if closer then 2 ft right
 			stop();
 			left();
-			sleep(1);
 			stop();
 
 		}
-		if (backSensor[5] <= 3528) { //if closer then 2 ft back
+		if (backSensor[2] <= 100) { //if closer then 2 ft back
 			stop();
 			forward();
-			sleep(1);
 			stop();
 
 		}
+		sleep(1);
 
-		forward();
+//		forward();
 
-	}
+	//}*/
 }

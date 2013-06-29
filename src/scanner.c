@@ -56,11 +56,10 @@ void scanSensors(int scanTimes, int topSensor[], int frontSensor[], int leftSens
 	//left 2
 	//right 3
 	//back 4
-	int TRIGGER_PIN[5] = { 18, 17, 27, 22, 23 };
-	int ECHO_PIN[5] = { 18, 17, 27, 22, 23 };
+	int TRIGGER_PIN[5] = { 18, 22, 17, 27, 23 };
+	int ECHO_PIN[5] = { 18, 22, 17, 27, 23 };
 
-	/* see if big difference without
-	 pinMode(TRIGGER_PIN[0], OUTPUT);
+/*	 pinMode(TRIGGER_PIN[0], OUTPUT);
 	 pinMode(TRIGGER_PIN[0], INPUT);
 	 pinMode(TRIGGER_PIN[1], OUTPUT);
 	 pinMode(TRIGGER_PIN[1], INPUT);
@@ -69,8 +68,7 @@ void scanSensors(int scanTimes, int topSensor[], int frontSensor[], int leftSens
 	 pinMode(TRIGGER_PIN[3], OUTPUT);
 	 pinMode(TRIGGER_PIN[3], INPUT);
 	 pinMode(TRIGGER_PIN[4], OUTPUT);
-	 pinMode(TRIGGER_PIN[4], INPUT);
-	 */
+	 pinMode(TRIGGER_PIN[4], INPUT);*/
 
 	int pulsewidth;
 
@@ -101,20 +99,22 @@ void scanSensors(int scanTimes, int topSensor[], int frontSensor[], int leftSens
 						/* valid reading code */
 						switch (count) {
 						case 0:
+							printf("pulsewidth inside scanner: %d\n", pulsewidth);
+							//printf("%d\n", loop);
 							topSensor[loop] = pulsewidth;
-							break;
+							continue;
 						case 1:
 							frontSensor[loop] = pulsewidth;
-							break;
+							continue;
 						case 2:
 							leftSensor[loop] = pulsewidth;
-							break;
+							continue;
 						case 3:
 							rightSensor[loop] = pulsewidth;
-							break;
+							continue;
 						case 4:
 							backSensor[loop] = pulsewidth;
-							break;
+							continue;
 						}
 
 						//printf("%d, ", pulsewidth);
@@ -124,16 +124,17 @@ void scanSensors(int scanTimes, int topSensor[], int frontSensor[], int leftSens
 					}
 				} else {
 					/* sensor not firing code */
-					printf("error, ");
+					continue;
 				}
 
 				//}
 				printf("\n");
 			}
+		}
 
 			break;
 		}
 
 		return;
 	}
-}
+

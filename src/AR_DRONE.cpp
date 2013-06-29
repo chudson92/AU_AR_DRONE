@@ -21,17 +21,18 @@
 using namespace std;
 
 void launchit();
-void takeoff();
-void land();
+
 void nodekill();
 
 void launchit() {
 	cout << "IN LAUNCHIT" << endl;
-	sleep(10);
+
+	cout << "PASSED CONTROLLER IN LAUNCHIT " << endl;
+/*	sleep(10);
 	takeoff();
 	sleep(10);
 	land();
-	sleep(5);
+	sleep(5);*/
 	nodekill();
 	sleep(2);
 
@@ -109,8 +110,8 @@ void takeoff() {
 
 	int main() {
 
-		int scans[5];
-			//goscan(1,scans);
+/*		int scans[5];
+			scanner()
 			scans[0] = 1;
 			scans[1] = 2;
 			scans[2] = 3;
@@ -118,19 +119,18 @@ void takeoff() {
 			scans[4] = 5;
 			int j;
 			for(j =0 ; j<5; j++)
-			std::cout << "ONE SCAN IN CONTROLLER: " << scans[j] << std::endl;
-
+			std::cout << "ONE SCAN IN CONTROLLER: " << scans[j] << std::endl;*/
 
 
 
 		bool dia = diagnostics(); //launch diagnostics
 
 		//if diagnostics return true launch
-		bool i = false;
-		if (i == true/*dia*/) {
+		bool i = true;
+		if (i == dia) {
 			char* launch = "launch?";
 			char* launchResponse = "launch";
-			send(launch);
+			sendMsg(launch);
 
 			char message[7];
 			receive(message, 6);
@@ -139,7 +139,7 @@ void takeoff() {
 			//cout << "strcmp returns... " << strcmp(xinit, message) << endl;
 			if (strcmp(launchResponse, message) == 0) {
 				cout << "when you typed launch i recieved: " << message << endl;
-				launchit();
+				controller();
 
 			} else {
 				cout << "STRING COMPARISON FAILED" << endl;

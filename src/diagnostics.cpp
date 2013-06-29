@@ -48,9 +48,9 @@ bool xbeeInit() {
 bool nodeInit() {
 	//Check Node.js running -> if not launch
 	//const char* battery = "drone> 100\ndrone>";
-	const char* battery = "drone> true\ndrone>";
+	const char* battery = "drone> true\ndron";
 	char* msgSend = "land()\n";
-	char messageBack[18];
+	char messageBack[17];
 	cmd(msgSend,messageBack);
 
 	cout << "message recieved in diagnostics: \n" << messageBack << endl;

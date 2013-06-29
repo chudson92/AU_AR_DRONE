@@ -68,11 +68,16 @@ bool setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity,
 				port.c_str());
 		return false;
 	}
-	if (tcgetattr(fd, &config) < 0) {
+/*	if (tcgetattr(fd, &config) < 0) {
 		fprintf(stderr, "\nERROR: could not read configuration of port %s\n",
 				port.c_str());
 		return false;
-	}
+	}*/
+
+
+	config.c_cc[VMIN]  = 0;
+	config.c_cc[VTIME] = 10;
+
 //
 // Input flags - Turn off input processing
 // convert break to null byte, no CR to NL translation,
@@ -80,8 +85,8 @@ bool setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity,
 // no input parity check, don't strip high bit off,
 // no XON/XOFF software flow control
 //
-	config.c_iflag &= ~(IGNBRK | BRKINT | ICRNL | INLCR | PARMRK | INPCK
-			| ISTRIP | IXON);
+/*	config.c_iflag &= ~(IGNBRK | BRKINT | ICRNL | INLCR | PARMRK | INPCK
+			| ISTRIP | IXON);*/
 //
 // Output flags - Turn off output processing
 // no CR to NL translation, no NL to CR-NL translation,
@@ -109,8 +114,8 @@ bool setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity,
 // One input byte is enough to return from read()
 // Inter-character timer off
 //
-	config.c_cc[VMIN] = 1;
-	config.c_cc[VTIME] = 10; // was 0
+	config.c_cc[VMIN] = 0;
+	config.c_cc[VTIME] = 20; // was 0
 
 // Get the current options for the port
 //tcgetattr(fd, &options);
@@ -286,7 +291,7 @@ void receive(char* str, int messageLength) {
 
 }
 
-void send(char* message) {
+void sendMsg(char* message) {
 	char* buf = message;
 	 int messageLength = sizeof(buf);
 	 cout << buf << endl;
@@ -371,6 +376,7 @@ void receiveQuick(char* str, int messageLength) {
 
 		int timeout = 250;
 		if (read(fd, ptr, 1) > 0) {
+			cout << "IN READQUICK: " << ptr << endl;
 			ptr++;
 			i++;
 		}
@@ -384,5 +390,6 @@ void receiveQuick(char* str, int messageLength) {
 	//cout << str << endl;
 	flush(cout);
 	close_port(fd);
+	return;
 
 }

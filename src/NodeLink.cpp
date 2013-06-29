@@ -84,13 +84,15 @@ void cmd(char* messageSend, char* messageBack) {
 		//readMsg(messageBack);
 		//write(myPipe[1], messageSend, strlen(messageSend));
 		writeMsg(messageSend);
+		sleep(1);
 		readMsg(messageBack);
+		sleep(1);
 
 	}
 }
 
 void writeMsg(char* messageSent) {
-	cout << "SENDING MESSAGE " << messageSent << " INSIDE writeMsg" << endl;
+	//cout << "SENDING MESSAGE " << messageSent << " INSIDE writeMsg" << endl;
 	write(myPipe[1], messageSent, strlen(messageSent));
 	return;
 
@@ -101,11 +103,10 @@ void readMsg(char* msgBack) {
 
 
 	int i = 0;
-	msgBack;
 	char* ptr;
 
 	ptr = msgBack;
-	msgBack[18] = '\0';
+	msgBack[17] = '\0';
 	while (1) {
 
 		if (read(myPipe2[0], ptr, 1) > 0) {
@@ -113,7 +114,7 @@ void readMsg(char* msgBack) {
 			ptr++;
 			i++;
 		}
-		if (i == 8) {
+		if (i == 16) {
 			//kill(pid+2, SIGKILL);
 			break;
 
