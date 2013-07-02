@@ -48,65 +48,6 @@ void nodekill(){
 	kill(temp, SIGKILL);
 
 }
-/*
-
-void takeoff() {
-	const char* takeoff = " true\ndrone> ";
-	char* goup = "takeoff()\n";
-	char messageBack[18];
-	writeMsg(goup);
-	//readMsg(messageBack);
-	//string str(messageBack);
-	//cout << "MESSAGE RETURNED FROM READ : " << str << endl;
-
-	//cout << "conversted to str: " << str << endl;
-	//str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-	// cout << "/n removed to str: " << str << endl;
-
-
-//	if (strcmp(messageBack, takeoff) == 0) {
-		str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'd'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'r'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'o'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'n'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'e'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), '>'), str.end());
-		cout<< "TAKEOFF WORKS" << endl;
-
-
-//	}
-//	else{
-//		cout << "TAKEOFF STRING CMP FAILED" << endl;
-
-//	}
-}
-
-	void land() {
-		const char* land = "drone> true\ndrone";
-		char* godown = "land()\n";
-		char msgBack[18];
-		writeMsg(godown);
-		//readMsg(msgBack);
-		//string str(msgBack);
-
-		//cout << "conversted to str: " << str << endl;
-		//str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-		// cout << "/n removed to str: " << str << endl;
-
-		//if (strcmp(msgBack, land) == 0) {
-			str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-			str.erase(std::remove(str.begin(), str.end(), 'd'), str.end());
-			str.erase(std::remove(str.begin(), str.end(), 'r'), str.end());
-			str.erase(std::remove(str.begin(), str.end(), 'o'), str.end());
-			str.erase(std::remove(str.begin(), str.end(), 'n'), str.end());
-			str.erase(std::remove(str.begin(), str.end(), 'e'), str.end());
-			str.erase(std::remove(str.begin(), str.end(), '>'), str.end());
-
-		//} else {
-
-		//}
-	}*/
 
 	int main() {
 

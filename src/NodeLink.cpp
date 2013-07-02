@@ -29,15 +29,15 @@ void cmd(char* messageSend, char* messageBack) {
 		exit(1);
 	}
 
-	if (pipe(myPipe2) == -1) {
+	/*if (pipe(myPipe2) == -1) {
 		perror("Pipe");
 		exit(1);
-	}
+	}*/
 
 	//char *binName = "echo";
-	char *message = "takeoff()\n";
+/*	char *message = "takeoff()\n";
 	char *message2 = "land()\n";
-	char *message3 = "battery()\n";
+	char *message3 = "battery()\n";*/
 
 	//construct our strings to send
 	//std::string myStr = std::string("hello");
@@ -52,21 +52,22 @@ void cmd(char* messageSend, char* messageBack) {
 		//we're redirecting STDIN such that it comes from the pipe
 		//close standard in
 		close(STDIN_FILENO);
-		close(STDOUT_FILENO);
+		//close(STDOUT_FILENO);
 		//std::cout << "INSIDE CHILD PROCESS" << std::endl;
 		close(myPipe[1]); //close end of pipe your not using
-		close(myPipe2[0]);
+		//close(myPipe2[0]);
 
 		//duplicate our stdin as the pipe output
 		dup2(myPipe[0], STDIN_FILENO);
-		dup2(myPipe2[1], STDOUT_FILENO);
+		//dup2(myPipe2[1], STDOUT_FILENO);
 
 		//change path
 		chdir("/home/pi/Node_ws");
 
 		//std::cout << "LAUNCHing NODE.JS" << std::endl;
 		//run new program
-		system("node repl.js\n");
+		system("node repl.js");
+		sleep(1);
 		//std::cout << "LAUNCHED NODE.JS" << std::endl;
 
 	} else //the parent process
@@ -75,19 +76,18 @@ void cmd(char* messageSend, char* messageBack) {
 		//system(" ps -ef | grep -w 'node repl.js' | cut -c10-15 | tail -2 | head -1");
 
 		close(myPipe[0]); //close end of pipe your not using
-		close(myPipe2[1]);
+		//close(myPipe2[1]);
 
 		//char killmessage[2]; killmessage[0] = 3; killmessage[1] = 3;
 		//write(myPipe[1], killmessage, 2);
 		//writeMsg(messageSend);
 		//sleep(2);
-		//readMsg(messageBack);
-		//write(myPipe[1], messageSend, strlen(messageSend));
-		writeMsg(messageSend);
-		sleep(1);
 		readMsg(messageBack);
-		sleep(1);
+		//write(myPipe[1], messageSend, strlen(messageSend));
+		//writeMsg(messageSend);
 
+	//	messageBack = "true";
+		return;
 	}
 }
 
@@ -106,8 +106,11 @@ void readMsg(char* msgBack) {
 	char* ptr;
 
 	ptr = msgBack;
-	msgBack[17] = '\0';
-	while (1) {
+	msgBack[0] = 't';
+	msgBack[1] = 'r';
+	msgBack[2] = 'u';
+	msgBack[3] = 'e';
+/*	while (1) {
 
 		if (read(myPipe2[0], ptr, 1) > 0) {
 			cout << ptr << endl;
@@ -120,7 +123,7 @@ void readMsg(char* msgBack) {
 
 		}
 		cout << "FAILED TO BREAK OUT OF WHILE LOOP" << endl;
-	}
+	}*/
 	cout << " OUT OF WHILE LOOP" << endl;
 	return;
 }

@@ -1,70 +1,76 @@
+#include <cstring>
+#include <iostream>
 #include "nodelink.h"
 extern "C" {
 #include "client.h"
 }
+
 void takeoff() {
-	char **cmd;
-	cmd[0] = "takeoff()";
-	tcp(1,cmd);
+	std::cout << "a" << std::endl;
+	char cmd[10];
+	strcpy(cmd, "takeoff()");
+	std::cout << cmd << std::endl;
+	sendCommand(cmd);
+	std::cout << "b" << std::endl;
 }
 
 void land() {
-	char **cmd;
-	cmd[0] = "land()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd = "land()";
+	sendCommand(cmd);
 }
 
 void forward() {
-	char **cmd;
-	cmd[0] = "front()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd = "front()";
+	sendCommand(cmd);
 }
 
 void back() {
-	char **cmd;
-	cmd[0] = "back()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd = "back()";
+	sendCommand(cmd);
 }
 
 void left() {
-	char **cmd;
-	cmd[0]= "left()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd= "left()";
+	sendCommand(cmd);
 }
 
 void right() {
-	char **cmd;
-	cmd[0]= "right()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd= "right()";
+	sendCommand(cmd);
 }
 
 void up() {
-	char **cmd;
-	cmd[0] = "up()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd = "up()";
+	sendCommand(cmd);
 }
 
 void down() {
-	char **cmd;
-	cmd[0] = "down()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd = "down()";
+	sendCommand(cmd);
 }
 
 void rotateClockwise() {
-	char **cmd;
-	cmd[0] = "clockwise()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd = "clockwise()";
+	sendCommand(cmd);
 }
 
 void rotateCounterClockwise() {
-	char **cmd;
-	cmd[0] = "counterClockwise()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd = "counterClockwise()";
+	sendCommand(cmd);
 }
 
 void stop() {
-	char **cmd;
-	cmd[0]  = "stop()";
-	tcp(1,cmd);
+	char* cmd;
+	cmd  = "stop()";
+	sendCommand(cmd);
 }
 

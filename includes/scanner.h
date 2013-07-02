@@ -11,8 +11,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-int waitforpin(int pin, int level, int timeout);
-void scanSensors(int scanTimes, int topSensor[], int frontSensor[], int leftSensor[], int rightSensor[], int backSensor[]);
+int waitforpin3(int pin, int level, int timeout);
+void scan4me(int pointer, int pulsewidth[][3]);
 
 #ifdef __cplusplus
 }

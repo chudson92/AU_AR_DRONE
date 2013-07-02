@@ -10,9 +10,10 @@
 #define HOST        "192.168.1.2"
 #define DIRSIZE     8192
 
-tcp(argc, argv)
-int argc; char **argv;
+tcp(int argc, char argv[2][100])
+//int argc; char **argv;
 {
+	printf("%s",argv[1]);
         char hostname[100];
 	char    dir[DIRSIZE];
 	//char* data = "takeoff()";
@@ -67,4 +68,11 @@ int argc; char **argv;
 	close(sd);*/
 }
 
- 
+sendCommand(char* cmd){
+	printf("c");
+	printf("c%s", cmd);
+	char argv[2][100];
+	strcpy(argv[1],cmd);
+	printf("%s", argv[1]);
+	tcp(2,argv);
+ }

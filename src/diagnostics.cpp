@@ -48,9 +48,9 @@ bool xbeeInit() {
 bool nodeInit() {
 	//Check Node.js running -> if not launch
 	//const char* battery = "drone> 100\ndrone>";
-	const char* battery = "drone> true\ndron";
+	const char* battery = "true";
 	char* msgSend = "land()\n";
-	char messageBack[17];
+	char messageBack[4];
 	cmd(msgSend,messageBack);
 
 	cout << "message recieved in diagnostics: \n" << messageBack << endl;
@@ -70,7 +70,7 @@ bool nodeInit() {
 		str.erase(std::remove(str.begin(), str.end(), 'e'), str.end());
 		str.erase(std::remove(str.begin(), str.end(), '>'), str.end());*/
 
-		cout << "battery life: " << str << endl;
+	//	cout << "battery life: " << str << endl;
 
 		return true;
 	} else {

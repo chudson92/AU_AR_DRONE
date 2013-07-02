@@ -15,8 +15,7 @@
 #define TIMEOUT 999 /* any value other than LOW or HIGH */
 
 
-int waitforpin(int pin, int level, int timeout)
-{
+int waitforpin(int pin, int level, int timeout){
    struct timeval now, start;
    int done;
    long micros;

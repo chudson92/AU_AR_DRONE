@@ -11,7 +11,8 @@
 extern "C" {
 #endif
 
-void tcp(int argc, char **argv);
+void tcp(int argc, char argv[2][100]);
+void sendCommand(char* cmd);
 
 #ifdef __cplusplus
 }
