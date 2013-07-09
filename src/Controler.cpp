@@ -10,48 +10,30 @@
 #include "XbeeIO.h"
 #include <unistd.h>
 extern "C" {
-#include "scanner.h"
+#include "scan.h"
 
 }
 
 using namespace std;
+double lastMeasurement[5] = {-1.0, -1.0, -1.0, -1.0, -1.0};
+
+
 
 void controller() {
-	//cout << " IN THE CONTROLLER " << endl;
-	bool autonomous = true;
-
-	int pulsewidth[5][3];
-/*	for(int y = 0; y < 5; y++){
-		pulsewidth[y] = new int[3];
-	}*/
-	int pointer = 0;
-
-	scan4me(pointer,pulsewidth);
-	pointer = (pointer+1)%3;
-	scan4me(pointer,pulsewidth);
-	pointer = (pointer+1)%3;
-	scan4me(pointer,pulsewidth);
-	pointer = (pointer+1)%3;
 
 	cout << "1" << endl;
-	takeoff();
-/*	cout << "2" << endl;
-	sleep(10);
-	land();*/
 
-	while (autonomous == true) {
-		//cout << "IN WHILE LOOP" << endl;
-		//char* str;
-		//receive(str, 4);
-		//cout << " AFTER RECIEVE " << endl;
-		//int scanTimes = 5;
+	int micros[1] = {-1};
+	scanSonar(lastMeasurement);
 
-		//std::cout << "After SCANTIMES" << std::endl;
+	while (1) {
+		double lastMeasurement[5] = {-1.0, -1.0, -1.0, -1.0, -1.0};
+		cout << "IN WHILE LOOP" << endl;
+		scanSonar(lastMeasurement);
+		cout << "returned value :  " << micros[0] << endl;
+		
 
-		scan4me(pointer,pulsewidth);
-		//cout << topSensor[5] << endl;
-
-/*		if (topSensor[2] <= 3528) { //if closer then 2 ft above
+	/*	if (topSensor[2] <= 3528) { //if closer then 2 ft above
 			stop();
 			down();
 			stop();
@@ -59,7 +41,7 @@ void controller() {
 		}*/
 
 		//TODO: Implement a protocal for going around
-		if (pulsewidth[2][1] <= 3528) { //if closer then 2 ft front
+		/*if (micros[0] <= 3528) { //if closer then 2 ft front
 			stop();
 
 			land();
@@ -83,7 +65,7 @@ void controller() {
 			stop();
 
 		}*/
-
+		//forward();
 
 }
 }

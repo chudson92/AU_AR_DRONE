@@ -37,8 +37,6 @@ bool xbeeInit() {
 
 	char message[5];
 	receive(message, 4);
-//	cout << "message recieved:" << message << endl;
-	//cout << "strcmp returns... " << strcmp(xinit, message) << endl;
 	if (strcmp(xinit, message) == 0)
 		return true;
 	else
@@ -47,30 +45,16 @@ bool xbeeInit() {
 
 bool nodeInit() {
 	//Check Node.js running -> if not launch
-	//const char* battery = "drone> 100\ndrone>";
-	const char* battery = "true";
+	const char* recievedCmd = "drone>true\ndrone>";
 	char* msgSend = "land()\n";
-	char messageBack[4];
+	char messageBack[17];
 	cmd(msgSend,messageBack);
 
 	cout << "message recieved in diagnostics: \n" << messageBack << endl;
 	string str(messageBack);
 
-	//cout << "conversted to str: " << str << endl;
-	//str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-	// cout << "/n removed to str: " << str << endl;
 
-
-	if (strcmp(messageBack, battery) == 0) {
-		/*str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'd'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'r'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'o'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'n'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), 'e'), str.end());
-		str.erase(std::remove(str.begin(), str.end(), '>'), str.end());*/
-
-	//	cout << "battery life: " << str << endl;
+	if (strcmp(messageBack, recievedCmd) == 0) {
 
 		return true;
 	} else {

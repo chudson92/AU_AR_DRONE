@@ -64,8 +64,8 @@ tcp(int argc, char argv[2][100])
 
         /* spew-out the results and bail out of here! 
         printf("%s\n", dir);
-
-	close(sd);*/
+*/
+	//close(sd);
 }
 
 sendCommand(char* cmd){

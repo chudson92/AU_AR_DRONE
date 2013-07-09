@@ -20,23 +20,11 @@
 
 using namespace std;
 
-void launchit();
+
 
 void nodekill();
 
-void launchit() {
-	cout << "IN LAUNCHIT" << endl;
 
-	cout << "PASSED CONTROLLER IN LAUNCHIT " << endl;
-/*	sleep(10);
-	takeoff();
-	sleep(10);
-	land();
-	sleep(5);*/
-	nodekill();
-	sleep(2);
-
-}
 
 void nodekill(){
 	system(" ps -ef | grep -w 'node repl.js' | cut -c10-15 | tail -2 | head -1 > PID.txt");
@@ -50,20 +38,6 @@ void nodekill(){
 }
 
 	int main() {
-
-/*		int scans[5];
-			scanner()
-			scans[0] = 1;
-			scans[1] = 2;
-			scans[2] = 3;
-			scans[3] = 4;
-			scans[4] = 5;
-			int j;
-			for(j =0 ; j<5; j++)
-			std::cout << "ONE SCAN IN CONTROLLER: " << scans[j] << std::endl;*/
-
-
-
 		bool dia = diagnostics(); //launch diagnostics
 
 		//if diagnostics return true launch
@@ -76,10 +50,7 @@ void nodekill(){
 			char message[7];
 			receive(message, 6);
 
-			cout << "message recieved:" << message << endl;
-			//cout << "strcmp returns... " << strcmp(xinit, message) << endl;
 			if (strcmp(launchResponse, message) == 0) {
-				cout << "when you typed launch i recieved: " << message << endl;
 				controller();
 
 			} else {
