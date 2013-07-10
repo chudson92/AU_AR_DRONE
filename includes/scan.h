@@ -11,7 +11,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void scanSonar(double lastMeasurement[5]);
+void scanSonar(double lastMeasurement[]);
 
 #ifdef __cplusplus
 }

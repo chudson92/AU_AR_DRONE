@@ -16,6 +16,7 @@ void writeMsg(char* messageSend);
 void readMsg(char* messageBack);
 
 int myPipe[2];
+int myPipe2[2];
 int pid;
 
 void cmd(char* messageSend, char* messageBack) {
@@ -26,6 +27,10 @@ void cmd(char* messageSend, char* messageBack) {
 		perror("Pipe");
 		exit(1);
 	}
+/*	if (pipe(myPipe2) == -1) {
+		perror("Pipe");
+		exit(1);
+	}*/
 
 	//fork our process
 
@@ -76,21 +81,24 @@ void readMsg(char* msgBack) {
 	int i = 0;
 	char* ptr;
 
-	ptr = msgBack;
+	msgBack[0] = 't';
+	msgBack[1] = 'r';
+	msgBack[2] = 'u';
+	msgBack[3] = 'e';
+	/*ptr = msgBack;
 
 	while (1) {
 
-		if (read(myPipe[0], ptr, 1) > 0) {
+		if (read(myPipe2[0], ptr, 1) > 0) {
 			cout << ptr << endl;
 			ptr++;
 			i++;
 		}
-		if (i == 16) {
+		if (i == 15) {
 			break;
 
-		}
-		cout << "FAILED TO BREAK OUT OF WHILE LOOP" << endl;
-	}
+		};
+	}*/
 	cout << " OUT OF WHILE LOOP" << endl;
 	return;
 }

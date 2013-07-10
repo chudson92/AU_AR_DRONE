@@ -9,10 +9,8 @@
 
 #include <wiringPi.h>
 
-
 int ECHO_PIN[5] = { 18, 17, 27, 22, 23 };
 
-double lastMeasurement[5];
 double risingEdge[5];
 int previousState[5];
 int currentState[5];
@@ -24,36 +22,28 @@ double Now();
 
 /***********************************************************************\
 * Input    : None                                                       *
-* Output   : Returns the current system time                            *
-\***********************************************************************/
-double Now(){
-  struct timeval tv_CurrentTime;
-  gettimeofday(&tv_CurrentTime,NULL);
-  return( (double) tv_CurrentTime.tv_sec + (double) tv_CurrentTime.tv_usec / 1000000.0-StartTime);
+ * Output   : Returns the current system time                            *
+ \***********************************************************************/
+double Now() {
+	struct timeval tv_CurrentTime;
+	gettimeofday(&tv_CurrentTime, NULL );
+	return ((double) tv_CurrentTime.tv_sec
+			+ (double) tv_CurrentTime.tv_usec / 1000000.0 - StartTime);
 }
 
-
-void scanSonar(double lastMeasurement[5]) {
-	sleep(.25);
+void scanSonar(double lastMeasurement[]) {
+	printf("in scanSonar");
 	StartTime = Now();
 
-/*	pinMode(ECHO_PIN[0], OUTPUT);
-	pinMode(ECHO_PIN[1], OUTPUT);
-	pinMode(ECHO_PIN[2], OUTPUT);
-	pinMode(ECHO_PIN[3], OUTPUT);
-	pinMode(ECHO_PIN[4], OUTPUT);*/
-
-	if (wiringPiSetupGpio() == -1) {
-
-		fprintf(stderr, "Can't initialise wiringPi: %s\n", strerror(errno));
-	}
-
-	//double lastMeasurement[5] = { -1.0, -1.0,  -1.0, -1.0, -1.0 };
-	double risingEdge[5] = {  -1.0, -1.0,  -1.0, -1.0, -1.0};
+	lastMeasurement[0] = -1.0;
+	lastMeasurement[1] = -1.0;
+	lastMeasurement[2] = -1.0;
+	lastMeasurement[3] = -1.0;
+	lastMeasurement[4] = -1.0;
+	double risingEdge[5] = { -1.0, -1.0, -1.0, -1.0, -1.0 };
 
 	int count = 0;
 	int i;
-	float currentTime;
 
 	while (count < 5) {
 		for (i = 0; i < 5; i++) {
@@ -78,6 +68,11 @@ void scanSonar(double lastMeasurement[5]) {
 
 		}
 
+	}
+
+	int j;
+	for (j = 0; j < 5; j++) {
+		printf("%f \n", lastMeasurement[j]);
 	}
 }
 

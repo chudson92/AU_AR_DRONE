@@ -15,57 +15,18 @@ extern "C" {
 }
 
 using namespace std;
-double lastMeasurement[5] = {-1.0, -1.0, -1.0, -1.0, -1.0};
-
-
+double lastMeasurement[5];
 
 void controller() {
 
-	cout << "1" << endl;
-
-	int micros[1] = {-1};
-	scanSonar(lastMeasurement);
-
+	cout << "running" << endl;
 	while (1) {
-		double lastMeasurement[5] = {-1.0, -1.0, -1.0, -1.0, -1.0};
-		cout << "IN WHILE LOOP" << endl;
 		scanSonar(lastMeasurement);
-		cout << "returned value :  " << micros[0] << endl;
-		
+		cout << lastMeasurement[1] << endl;
 
-	/*	if (topSensor[2] <= 3528) { //if closer then 2 ft above
-			stop();
-			down();
-			stop();
-
-		}*/
-
-		//TODO: Implement a protocal for going around
-		/*if (micros[0] <= 3528) { //if closer then 2 ft front
-			stop();
-
-			land();
-
+		if (lastMeasurement[1] < 0.003528) {
+			cout << "------------------STOP------------------" << endl;
 		}
-		/*if (leftSensor[2] <= 100) { //if closer then 2 ft left
-			stop();
-			right();
-			stop();
 
-		}
-		if (rightSensor[2] <= 100) { //if closer then 2 ft right
-			stop();
-			left();
-			stop();
-
-		}
-		if (backSensor[2] <= 100) { //if closer then 2 ft back
-			stop();
-			forward();
-			stop();
-
-		}*/
-		//forward();
-
-}
+	}
 }

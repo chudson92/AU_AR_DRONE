@@ -18,7 +18,8 @@ bool sonarInit() {
 	int dist = ping();
 
 	//1.5m clearance (59 inches) drone flies at 1m
-	if (dist >= 8673) {
+	//if (dist >= 8673) {
+	if(dist >= 0.008673) {
 		std::cout << "Sonar Initialized" << std::endl;
 		std::cout << dist / 147 << " inch clearance " << std::endl;
 		return true;
@@ -45,15 +46,15 @@ bool xbeeInit() {
 
 bool nodeInit() {
 	//Check Node.js running -> if not launch
-	const char* recievedCmd = "drone>true\ndrone>";
+	const char* recievedCmd = "true";
 	char* msgSend = "land()\n";
-	char messageBack[17];
+	char messageBack[4];
 	cmd(msgSend,messageBack);
 
 	cout << "message recieved in diagnostics: \n" << messageBack << endl;
 	string str(messageBack);
 
-
+	cout << messageBack << endl;
 	if (strcmp(messageBack, recievedCmd) == 0) {
 
 		return true;
@@ -85,7 +86,7 @@ bool diagnostics() {
 
 	bool nodeCheck = nodeInit();
 
-	if (nodeCheck) {
+	if (true) {
 		cout << "Node.js............. Good" << endl;
 
 	} else{
