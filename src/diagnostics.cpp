@@ -17,9 +17,9 @@ bool sonarInit() {
 
 	int dist = ping();
 
-	//1.5m clearance (59 inches) drone flies at 1m
-	//if (dist >= 8673) {
-	if(dist >= 0.008673) {
+//1.5m clearance (59 inches) drone flies at 1m
+//if (dist >= 8673) {
+	if (dist >= 0.008673) {
 		std::cout << "Sonar Initialized" << std::endl;
 		std::cout << dist / 147 << " inch clearance " << std::endl;
 		return true;
@@ -29,27 +29,39 @@ bool sonarInit() {
 	}
 }
 
-bool xbeeInit() {
+bool xbeeInit(int fd) {
 	const char* xinit = "init";
+
+	struct serialData myPacket;
+	myPacket.fd = fd;
+	myPacket.startChar = '#';
+	myPacket.endChar = '!';
+	myPacket.start = true;
+	myPacket.received = false;
 
 	std::cout << "Initializing Xbee..." << std::endl;
 
 	std::cout << "Run Initialize on Ground Station please" << std::endl;
 
 	char message[5];
-	receive(message, 4);
-	if (strcmp(xinit, message) == 0)
+	while(!myPacket.received){
+	read_char(myPacket);
+	}
+	//printf("whatever\n");
+	if (strcmp(xinit, myPacket.data) == 0){
+		cout << myPacket.data << endl;
 		return true;
+	}
 	else
 		return false;
 }
 
 bool nodeInit() {
-	//Check Node.js running -> if not launch
+//Check Node.js running -> if not launch
 	const char* recievedCmd = "true";
 	char* msgSend = "land()\n";
 	char messageBack[4];
-	cmd(msgSend,messageBack);
+	cmd(msgSend, messageBack);
 
 	cout << "message recieved in diagnostics: \n" << messageBack << endl;
 	string str(messageBack);
@@ -64,7 +76,7 @@ bool nodeInit() {
 
 }
 
-bool diagnostics() {
+bool diagnostics(int fd) {
 
 	bool sonarCheck = sonarInit();
 	if (sonarCheck) {
@@ -75,7 +87,7 @@ bool diagnostics() {
 		exit(EXIT_FAILURE);
 	}
 
-	bool xbeeCheck = xbeeInit();
+	bool xbeeCheck = xbeeInit(fd);
 	if (xbeeCheck) {
 		cout << "Xbee............. Good" << endl;
 
@@ -89,7 +101,7 @@ bool diagnostics() {
 	if (true) {
 		cout << "Node.js............. Good" << endl;
 
-	} else{
+	} else {
 		cout << "Node.js initialization FAILED" << endl;
 		exit(EXIT_FAILURE);
 	}
@@ -97,7 +109,7 @@ bool diagnostics() {
 //get navdata
 //check battery -> return battery %
 	cout << "Diagnostics complete clear to launch()" << endl;
-return true;
-	//exit(EXIT_FAILURE);
+	return true;
+//exit(EXIT_FAILURE);
 }
 

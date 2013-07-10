@@ -6,12 +6,9 @@ extern "C" {
 }
 
 void takeoff() {
-	std::cout << "a" << std::endl;
 	char cmd[10];
 	strcpy(cmd, "takeoff()");
-	std::cout << cmd << std::endl;
 	sendCommand(cmd);
-	std::cout << "b" << std::endl;
 }
 
 void land() {

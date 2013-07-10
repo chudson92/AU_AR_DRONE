@@ -11,6 +11,6 @@
 
 #include "sonar.h"
 
-int diagnostics();
+int diagnostics(int fd);
 
 #endif /* DIAGNOSTICS_H_ */

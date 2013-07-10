@@ -8,6 +8,6 @@
 #ifndef CONTROLER_H_
 #define CONTROLER_H_
 
-void  controller();
+void  controller(int fd);
 
 #endif /* CONTROLER_H_ */

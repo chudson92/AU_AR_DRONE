@@ -17,7 +17,8 @@
 #include "Controler.h"
 #include <iostream>     // std::cout
 #include <fstream>      // std::ifstream
-
+#include <fstream>
+#include <fcntl.h>
 using namespace std;
 
 
@@ -38,20 +39,34 @@ void nodekill(){
 }
 
 	int main() {
-		bool dia = diagnostics(); //launch diagnostics
+		std::string port = "/dev/ttyUSB0";
+		int fd = open_port(port);
+		int baud = 57600;
+		bool setup = setup_port(fd, baud, 8, 1, false, false);
+
+		bool dia = diagnostics(fd); //launch diagnostics
 
 		//if diagnostics return true launch
-		bool i = true;
-		if (i == dia) {
+
+
+		SerialData myPacket2;
+		init_serialData(myPacket2, '#', '!');
+		myPacket2.fd = fd;
+
+		if (dia) {
+		//	printf("%d", myPacket2.fd);
 			char* launch = "launch?";
 			char* launchResponse = "launch";
-			sendMsg(launch);
 
 			char message[7];
-			receive(message, 6);
+			while(!myPacket2.received){
 
-			if (strcmp(launchResponse, message) == 0) {
-				controller();
+			read_char(myPacket2);
+			}
+
+			cout << myPacket2.data << endl;
+			if (strcmp(launchResponse, myPacket2.data) == 0) {
+				controller(fd);
 
 			} else {
 				cout << "STRING COMPARISON FAILED" << endl;

@@ -13,7 +13,6 @@
 tcp(int argc, char argv[2][100])
 //int argc; char **argv;
 {
-	printf("%s",argv[1]);
         char hostname[100];
 	char    dir[DIRSIZE];
 	//char* data = "takeoff()";

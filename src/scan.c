@@ -32,7 +32,6 @@ double Now() {
 }
 
 void scanSonar(double lastMeasurement[]) {
-	printf("in scanSonar");
 	StartTime = Now();
 
 	lastMeasurement[0] = -1.0;
@@ -70,9 +69,9 @@ void scanSonar(double lastMeasurement[]) {
 
 	}
 
-	int j;
+/*	int j;
 	for (j = 0; j < 5; j++) {
 		printf("%f \n", lastMeasurement[j]);
-	}
+	}*/
 }
 
