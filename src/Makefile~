@@ -16,8 +16,8 @@ CFLAGS=-c -g -l wiringPi
 LDFLAGS=-l wiringPi
 
 # All .cpp source and object files
-CPPSOURCES=AR_DRONE.cpp Controler.cpp  diagnostics.cpp \
-	 XbeeIO.cpp filter.cpp
+CPPSOURCES=AR_DRONE.cpp Controler.cpp Controls.cpp diagnostics.cpp \
+NodeLink.cpp XbeeIO.cpp filter.cpp
 CPPOBJECTS=$(CPPSOURCES:.cpp=.o)
 
 # All .c source and object files
@@ -36,16 +36,16 @@ EXECUTABLE=testrun
 all: $(CSOURCES) $(CPPSOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(CPPOBJECTS) $(COBJECTS)
-	g++ $(LDFLAGS) $(CPPOBJECTS) $(COBJECTS) -o $@
+g++ $(LDFLAGS) $(CPPOBJECTS) $(COBJECTS) -o $@
 
 .cpp.o:
-	g++ $(CFLAGS) $< -o $@
+g++ $(CFLAGS) $< -o $@
 .c.o:
-	gcc $(CFLAGS) $< -o $@
+gcc $(CFLAGS) $< -o $@
 
 
 # Indicates target is not the name of a file. Separate multiple targets with
 # spaces.
 .PHONY: clean
 clean:
-	rm -rf $(wildcard *.o) $(EXECUTABLE)
+rm -rf $(wildcard *.o) $(EXECUTABLE)

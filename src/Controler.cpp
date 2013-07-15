@@ -4,64 +4,72 @@
  *  Created on: Jun 27, 2013
  *      Author: chris
  */
-#include <iostream>
+
 #include "Controler.h"
-#include "Controls.h"
-#include "XbeeIO.h"
-#include <unistd.h>
-extern "C" {
-#include "scan.h"
-
-}
-
+#include <iostream>
 using namespace std;
 double lastMeasurement[5];
 
+
 void controller(int fd) {
 
-	cout << "running" << endl;
-
 	SerialData myPacket3;
-//	init_serialData(myPacket3, '#', '!');
-
+	double medians[5];
     myPacket3.start = true;
     myPacket3.received = false;
     myPacket3.i = 0;
     myPacket3.startChar = '#';
     myPacket3.endChar = '!';
 	myPacket3.fd = fd;
+	int pointer = 0;
+	double readings[3][5];
+	int i;
+	for(i = 0; i < 3 ; i++){
+	scanSonar(lastMeasurement);	
+	int j;
+	for(j =0; j < 5; j++){
+		readings[i][j] = lastMeasurement[j];
+}
+	cout << "\n" ;
+}
 
-	takeoff();
-	int block = 0;
+	median_filter2d(readings,medians);
+
+
+	//takeoff();
+
+	setup();
 	while (1) {
-		cout << "In while loop" << endl;
+		get_Navdata_demo();
+
+
 		read_quick(myPacket3);
-		//cout << myPacket3.data << endl;
 		if(myPacket3.received == true){
-			cout << "AHHHHHHHHHHHHHHHHHHHHHH LAND!" << endl;
+			hover();
 			land();
-			sleep(1);
 			break;
+
 		}
-		cout << "at sonar" << endl;
 		scanSonar(lastMeasurement);
-//		cout << lastMeasurement[1] << endl;
-
-		if(block == 0){
-	//	forward();
-		}
-
-		if (lastMeasurement[1] < 0.003528) {
-			stop();
-			//back();
-			//sleep(1);
-			//stop();
-			//block = 1;
-		}
-		if(lastMeasurement[0] < .001500){
-		}
+		int k;
+		for(k =0; k < 5; k++){
+			readings[pointer][k] = lastMeasurement[k];
 
 	}
-	cout << "BOOOOOM I CRASHED" << endl;
-	land();
+		pointer = (pointer + 1)%3;
+		median_filter2d(readings,medians);
+
+		if(medians[1] <= .003528 ){
+			cout << "if:" << medians[1] << endl;
+			hover();
+			watchDog();
+			cout << " --------------OBJECT DETECTED --------------" << endl;
+
+		}
+
+		navdata_read();
+
+
+	}
+
 }

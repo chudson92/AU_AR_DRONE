@@ -5,13 +5,15 @@
  *      Author: chris
  */
 
-#ifndef SCAN_H_
-#define SCAN_H_
+#ifndef _SCAN_H_
+#define _SCAN_H_
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 void scanSonar(double lastMeasurement[]);
+double Now();
 
 #ifdef __cplusplus
 }

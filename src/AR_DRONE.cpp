@@ -2,41 +2,23 @@
 #include <stdlib.h>
 
 #include <signal.h>
-#include <string>
 #include <string.h>
 #include <sys/wait.h>
-#include <iostream>
 #include <sstream>
 #include "xbee.h"
 #include <unistd.h>								//this is what you need for fork, pipe, exec
 #include "diagnostics.h"
 #include "XbeeIO.h"
-#include "nodelink.h"
 #include <string>
 #include <algorithm>
 #include "Controler.h"
 #include <iostream>     // std::cout
 #include <fstream>      // std::ifstream
-#include <fstream>
 #include <fcntl.h>
 using namespace std;
 
 
 
-void nodekill();
-
-
-
-void nodekill(){
-	system(" ps -ef | grep -w 'node repl.js' | cut -c10-15 | tail -2 | head -1 > PID.txt");
-	ifstream pids;
-	pids.open("PID.txt");
-	int temp;
-	pids>>temp;
-	pids.close();
-	kill(temp, SIGKILL);
-
-}
 
 	int main() {
 		std::string port = "/dev/ttyUSB0";

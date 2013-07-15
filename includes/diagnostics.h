@@ -9,8 +9,11 @@
 #define DIAGNOSTICS_H_
 
 
-#include "sonar.h"
 
-int diagnostics(int fd);
+extern "C" {
+#include "sonar.h"
+}
+
+bool diagnostics(int fd);
 
 #endif /* DIAGNOSTICS_H_ */

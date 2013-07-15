@@ -1,15 +1,10 @@
+#include "diagnostics.h"
 #include <iostream>
 #include "XbeeIO.h"
 #include <string.h>
 #include <cstdio>
-#include "nodelink.h"
 #include <string>
 #include <algorithm>
-
-extern "C" {
-#include "sonar.h"
-}
-
 using namespace std;
 bool sonarInit() {
 
@@ -21,7 +16,7 @@ bool sonarInit() {
 //if (dist >= 8673) {
 	if (dist >= 0.008673) {
 		std::cout << "Sonar Initialized" << std::endl;
-		std::cout << dist / 147 << " inch clearance " << std::endl;
+		std::cout << dist / .000147 << " inch clearance " << std::endl;
 		return true;
 	} else {
 		std::cout << " Low clearance ... Takeoff blocked " << std::endl;
@@ -47,7 +42,7 @@ bool xbeeInit(int fd) {
 	while(!myPacket.received){
 	read_char(myPacket);
 	}
-	//printf("whatever\n");
+
 	if (strcmp(xinit, myPacket.data) == 0){
 		cout << myPacket.data << endl;
 		return true;
@@ -56,25 +51,6 @@ bool xbeeInit(int fd) {
 		return false;
 }
 
-bool nodeInit() {
-//Check Node.js running -> if not launch
-	const char* recievedCmd = "true";
-	char* msgSend = "land()\n";
-	char messageBack[4];
-	cmd(msgSend, messageBack);
-
-	cout << "message recieved in diagnostics: \n" << messageBack << endl;
-	string str(messageBack);
-
-	cout << messageBack << endl;
-	if (strcmp(messageBack, recievedCmd) == 0) {
-
-		return true;
-	} else {
-		return false;
-	}
-
-}
 
 bool diagnostics(int fd) {
 
@@ -96,20 +72,7 @@ bool diagnostics(int fd) {
 		exit(EXIT_FAILURE);
 	}
 
-	bool nodeCheck = nodeInit();
-
-	if (true) {
-		cout << "Node.js............. Good" << endl;
-
-	} else {
-		cout << "Node.js initialization FAILED" << endl;
-		exit(EXIT_FAILURE);
-	}
-
-//get navdata
-//check battery -> return battery %
 	cout << "Diagnostics complete clear to launch()" << endl;
 	return true;
-//exit(EXIT_FAILURE);
 }
 

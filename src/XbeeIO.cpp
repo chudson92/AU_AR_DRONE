@@ -1,4 +1,3 @@
-
 #include <fstream>
 #include <fcntl.h>
 // Standard includes
@@ -68,17 +67,14 @@ bool setup_port(int fd, int baud, int data_bits, int stop_bits, bool parity,
 		return false;
 	}
 
-	config.c_iflag &= ~(IGNBRK | BRKINT | ICRNL | INLCR | PARMRK | INPCK | ISTRIP | IXON);
-	config.c_oflag =0;
+	config.c_iflag &= ~(IGNBRK | BRKINT | ICRNL | INLCR | PARMRK | INPCK
+			| ISTRIP | IXON);
+	config.c_oflag = 0;
 	config.c_lflag &= ~(ECHO | ECHONL | ICANON | IEXTEN | ISIG);
 	config.c_cflag &= ~(CSIZE | PARENB);
 	config.c_cflag |= CS8;
 	config.c_cc[VMIN] = 0;
-	config.c_cc[VTIME] = 10;
-
-
-
-
+	config.c_cc[VTIME] = .01;
 
 	switch (baud) {
 	case 1200:
@@ -158,51 +154,51 @@ bool close_port(int fd) {
 	return true;
 }
 void init_serialData(SerialData &d, char start, char end) {
-    d.fd = -1;
-    d.start = true;
-    d.received = false;
-    d.i = 0;
-    d.startChar = start;
-    d.endChar = end;
+	d.fd = -1;
+	d.start = true;
+	d.received = false;
+	d.i = 0;
+	d.startChar = start;
+	d.endChar = end;
 }
 
 void read_quick(SerialData &myPacket) {
-    if (myPacket.fd == -1) {
-        return;
-    }
+	if (myPacket.fd == -1) {
+		return;
+	}
 
-    char buff;
-    while (!myPacket.received) {
+	char buff;
+	while (!myPacket.received) {
 
-    	if (read(myPacket.fd, &buff, sizeof(char)) > 0) {
+		if (read(myPacket.fd, &buff, sizeof(char)) > 0) {
 
-            if (myPacket.start) {
-                if (buff == myPacket.startChar) {
-                    myPacket.start = false;
-                } else {
-                    return;
-                }
-            } else {
-                if (buff == myPacket.endChar) {
+			if (myPacket.start) {
+				if (buff == myPacket.startChar) {
+					myPacket.start = false;
+				} else {
+					return;
+				}
+			} else {
+				if (buff == myPacket.endChar) {
 
-                    myPacket.received = true;
-                    myPacket.i = 0;
-                } else {
-                    myPacket.data[myPacket.i] = buff;
-                    myPacket.i++;
-                }
-            }
-        }else{
+					myPacket.received = true;
+					myPacket.i = 0;
+				} else {
+					myPacket.data[myPacket.i] = buff;
+					myPacket.i++;
+				}
+			}
+		} else {
 
-        	return;
-        }
+			return;
+		}
 
-    }
+	}
 }
 
 void read_char(SerialData &myPacket) {
-//	printf("%d", myPacket.fd);
-//	cout << " YO IM IN READ" << endl;
+// printf("%d", myPacket.fd);
+// cout << " YO IM IN READ" << endl;
 	if (myPacket.fd == -1) {
 		return;
 	}
@@ -237,4 +233,3 @@ void sendMsg(char* message) {
 //if (messageLength != test) fprintf(stderr, "ERROR: Wrote %d bytes in send(char* message) but should have written %d\n", test, messageLength);
 
 }
-

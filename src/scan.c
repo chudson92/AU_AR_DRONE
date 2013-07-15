@@ -1,3 +1,5 @@
+#include "scan.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,6 +11,7 @@
 
 #include <wiringPi.h>
 
+
 int ECHO_PIN[5] = { 18, 17, 27, 22, 23 };
 
 double risingEdge[5];
@@ -18,7 +21,6 @@ double StartTime = 0.0;
 
 struct timespec start[5], now[5];
 
-double Now();
 
 /***********************************************************************\
 * Input    : None                                                       *
@@ -68,10 +70,5 @@ void scanSonar(double lastMeasurement[]) {
 		}
 
 	}
-
-/*	int j;
-	for (j = 0; j < 5; j++) {
-		printf("%f \n", lastMeasurement[j]);
-	}*/
 }
 
