@@ -14,6 +14,20 @@
 	navdata_write ((int8_t*)buff);
 
 }
+ void left(){
+	char buff[100];
+	sprintf(buff, "AT*PCMD=%d,1,%d,0,0,0\r", seq++, *(int*)&tilt_left);
+	int buff_len = strlen( buff );
+	navdata_write ((int8_t*)buff);
+
+}
+ void right(){
+	char buff[100];
+	sprintf(buff, "AT*PCMD=%d,1,%d,0,0,0\r", seq++, *(int*)&tilt_right);
+	int buff_len = strlen( buff );
+	navdata_write ((int8_t*)buff);
+
+}
  void rotate(){
 	char buff[100];
 	sprintf(buff, "AT*PCMD=%d,1,0,0,0,%d\r", seq++, *(int*)&rotPower);
@@ -41,6 +55,11 @@
 	navdata_write ((int8_t*)buff);
 }
 
+ void calib_magneto() {
+ 	char buff[100];
+ 	sprintf(buff, "AT*CALIB=%d,1,\r", seq++);
+ 	navdata_write ((int8_t*)buff);
+ }
 
  void setup(void) {
  	int32_t one = 1,zero=0;
@@ -83,190 +102,228 @@
  }
 
  void navdata_read(void) {
+	//printf("read navdata\n");
  	int size, l;
  	size = 0;
  	size = recvfrom ( navdata_socket, &navdata_message[0], NAVDATA_BUFFER_SIZE, 0x0, (struct sockaddr *)&from, (socklen_t *)&l);
- 	printf("%x\n", navdata_message[0]);
- 	printf("flying percentage : %d\n", navdemoData.vbat_flying_percentage);
- 	//printf("psi : %f", navdemoData.psi);
+ 	int i;
+ 	//for (i = 16; i < size; i++) printf("%x ", navdata_message[i]);
+	//printf("out of read\n");
  }
 
  void get_Navdata_demo(void) {
  	char command[100];
- 	sprintf(command,"AT*COMWDG=%d\r",seq);
+ 	sprintf(command,"AT*CONFIG=%d,\"general:navdata_demo\",\"TRUE\"\r",seq);
  	navdata_write(command);
- 	printf("seq : %d \n", seq);
  	seq++;
  }
 
- int parse_navdata() {
- 	uint8_t *ptr = navdata_message;
+ void parse_navdata() {
+	//printf("parse navdata\n");
+ 	//uint8_t navdata_message[index] = navdata_message;
+	int index = 0;
  	int32_t header;
- 	header = *ptr;
- 	ptr++;
- 	header |= (*ptr << 8);
- 	ptr++;
- 	header |= (*ptr << 16);
- 	ptr++;
- 	header |= (*ptr << 24);
- 	ptr++;
+ 	header = navdata_message[index];
+ 	index += 1;
+ 	header |= (navdata_message[index] << 8);
+ 	index += 1;
+ 	header |= (navdata_message[index] << 16);
+ 	index += 1;
+ 	header |= (navdata_message[index] << 24);
+ 	index += 1;
  	if (header != 0x55667788) {
- 		return 0;
+ 		return;
  	}
- 	drone_state = *ptr;
- 	ptr++;
- 	drone_state |= (*ptr << 8);
- 	ptr++;
- 	drone_state |= (*ptr << 16);
- 	ptr++;
- 	drone_state |= (*ptr << 24);
- 	ptr++;
+ 	drone_state = navdata_message[index];
+ 	index += 1;
+ 	drone_state |= (navdata_message[index] << 8);
+ 	index += 1;
+ 	drone_state |= (navdata_message[index] << 16);
+ 	index += 1;
+ 	drone_state |= (navdata_message[index] << 24);
+ 	index += 1;
+ 	//printf("drone_state: %x\n", drone_state);
 
- 	sequenceNumber = *ptr;
- 	ptr++;
- 	sequenceNumber |= (*ptr << 8);
- 	ptr++;
- 	sequenceNumber |= (*ptr << 16);
- 	ptr++;
- 	sequenceNumber |= (*ptr << 24);
- 	ptr++;
+ 	sequenceNumber = navdata_message[index];
+ 	index += 1;
+ 	sequenceNumber |= (navdata_message[index] << 8);
+ 	index += 1;
+ 	sequenceNumber |= (navdata_message[index] << 16);
+ 	index += 1;
+ 	sequenceNumber |= (navdata_message[index] << 24);
+ 	index += 1;
+ 	//printf("seq_num: %x\n", sequenceNumber);
 
- 	visionFlag = *ptr;
- 	ptr++;
- 	visionFlag |= (*ptr << 8);
- 	ptr++;
- 	visionFlag |= (*ptr << 16);
- 	ptr++;
- 	visionFlag |= (*ptr << 24);
- 	ptr++;
+ 	visionFlag = navdata_message[index];
+ 	index += 1;
+ 	visionFlag |= (navdata_message[index] << 8);
+ 	index += 1;
+ 	visionFlag |= (navdata_message[index] << 16);
+ 	index += 1;
+ 	visionFlag |= (navdata_message[index] << 24);
+ 	index += 1;
+ 	//printf("Vision Flag: %x\n", visionFlag);
 
- 	while (ptr != NULL) {
- 		getNextOption(ptr);
+ 	while (index != -1) {
+ 		getNextOption(&index);
  	}
+
  }
 
-void getNextOption(uint8_t *ptr) {
+void getNextOption(int *index) {
  	int16_t id;
- 	id = *ptr;
- 	ptr++;
- 	id |= (*ptr << 8);
-
+ 	int16_t option_size = 0;
+ 	id = (uint8_t)navdata_message[*index];
+ 	*index += 1;
+ 	id |= ((uint8_t)navdata_message[*index] << 8);
+ 	*index += 1;
+ 	//printf("id: %x\n");
+ 	option_size = (uint8_t)navdata_message[*index];
+ 	*index += 1;
+ 	option_size |= ((uint8_t)navdata_message[*index] << 8);
+ 	*index += 1;
+ 	//printf("size: %x\n", option_size);
+ 	//int i;
+ 	//for(i = *index + option_size - 4; i < 500; i++) printf("%x ", navdata_message[i]);
+ 	//printf("\n");
+ 	//sleep(1);
  	switch (id) {
  		case 0: //navdata_demo
- 			parse_navdemo(ptr);
- 			break;
- 		case 10: //altitude
+ 			//printf("\nDEMO\n");
+ 			parse_navdemo(index);
  			break;
  		case -1: //checksum
- 			parse_checksum(ptr);
+ 			//printf("\nCHECK\n");
+ 			parse_checksum(index);
  			break;
  		default:
+ 			//printf("\nDEFAULT\n");
+ 			*index += option_size -4;
  			 break;
  	}
  }
- void parse_navdemo(uint8_t *ptr) {
+ void parse_navdemo(int *index) {
  	int32_t temp;
- 	ptr += 2; //skip over size
- 	navdemoData.ctrl_state = *ptr;
- 	ptr++;
- 	navdemoData.ctrl_state |= (*ptr << 8);
- 	ptr++;
- 	navdemoData.ctrl_state |= (*ptr << 16);
- 	ptr++;
- 	navdemoData.ctrl_state |= (*ptr << 24);
- 	ptr++;
+ 	navdemoData.ctrl_state = navdata_message[*index];
+ 	*index += 1;
+ 	navdemoData.ctrl_state |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	navdemoData.ctrl_state |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	navdemoData.ctrl_state |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
 
- 	navdemoData.vbat_flying_percentage = &*ptr;
- 	ptr++;
- 	navdemoData.vbat_flying_percentage |= (*ptr << 8);
- 	ptr++;
- 	navdemoData.vbat_flying_percentage |= (*ptr << 16);
- 	ptr++;
- 	navdemoData.vbat_flying_percentage |= (*ptr << 24);
- 	ptr++;
+ 	navdemoData.vbat_flying_percentage = navdata_message[*index];
+ 	*index += 1 ;
+ 	navdemoData.vbat_flying_percentage |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	navdemoData.vbat_flying_percentage |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	navdemoData.vbat_flying_percentage |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
+ 	//printf("vbat_: %d%%\n", navdemoData.vbat_flying_percentage);
 
- 	temp = *ptr;
- 	ptr++;
- 	temp |= (*ptr << 8);
- 	ptr++;
- 	temp |= (*ptr << 16);
- 	ptr++;
- 	temp |= (*ptr << 24);
- 	ptr++;
+ 	temp = navdata_message[*index];
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
  	navdemoData.theta = *(float *)&temp;
+ 	navdemoData.theta /= 1000;
 
- 	temp = *ptr;
- 	ptr++;
- 	temp |= (*ptr << 8);
- 	ptr++;
- 	temp |= (*ptr << 16);
- 	ptr++;
- 	temp |= (*ptr << 24);
- 	ptr++;
+ 	temp = navdata_message[*index];
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
  	navdemoData.phi = *(float *)&temp;
+ 	navdemoData.phi /= 1000;
 
- 	temp = *ptr;
- 	ptr++;
- 	temp |= (*ptr << 8);
- 	ptr++;
- 	temp |= (*ptr << 16);
- 	ptr++;
- 	temp |= (*ptr << 24);
- 	ptr++;
+ 	temp = navdata_message[*index];
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
  	navdemoData.psi = *(float *)&temp;
+ 	navdemoData.psi /= 1000;
+ 	//printf("YAW: %f \n", navdemoData.psi);
 
- 	navdemoData.altitude = *ptr;
- 	ptr++;
- 	navdemoData.altitude |= (*ptr << 8);
- 	ptr++;
- 	navdemoData.altitude |= (*ptr << 16);
- 	ptr++;
- 	navdemoData.altitude |= (*ptr << 24);
- 	ptr++;
+ 	navdemoData.altitude = navdata_message[*index];
+ 	*index += 1 ;
+ 	navdemoData.altitude |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	navdemoData.altitude |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	navdemoData.altitude |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
+ 	//printf("alt: %f in\n", navdemoData.altitude);
 
- 	temp = *ptr;
- 	ptr++;
- 	temp |= (*ptr << 8);
- 	ptr++;
- 	temp |= (*ptr << 16);
- 	ptr++;
- 	temp |= (*ptr << 24);
- 	ptr++;
+ 	temp = navdata_message[*index];
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
  	navdemoData.vx = *(float *)&temp;
+ 	//printf("vx: %f\n", navdemoData.vx);
 
- 	temp = *ptr;
- 	ptr++;
- 	temp |= (*ptr << 8);
- 	ptr++;
- 	temp |= (*ptr << 16);
- 	ptr++;
- 	temp |= (*ptr << 24);
- 	ptr++;
+ 	temp = navdata_message[*index];
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
  	navdemoData.vy = *(float *)&temp;
+ 	//printf("vy: %f\n", navdemoData.vy);
 
- 	temp = *ptr;
- 	ptr++;
- 	temp |= (*ptr << 8);
- 	ptr++;
- 	temp |= (*ptr << 16);
- 	ptr++;
- 	temp |= (*ptr << 24);
- 	ptr++;
+ 	temp = navdata_message[*index];
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	temp |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
  	navdemoData.vz = *(float *)&temp;
+ 	//printf("vz: %f\n", navdemoData.vz);
 
- 	navdemoData.num_frames = *ptr;
- 	ptr++;
- 	navdemoData.num_frames |= (*ptr << 8);
- 	ptr++;
- 	navdemoData.num_frames |= (*ptr << 16);
- 	ptr++;
- 	navdemoData.num_frames |= (*ptr << 24);
- 	ptr++;
+ 	navdemoData.num_frames = navdata_message[*index];
+ 	*index += 1 ;
+ 	navdemoData.num_frames |= (navdata_message[*index] << 8);
+ 	*index += 1 ;
+ 	navdemoData.num_frames |= (navdata_message[*index] << 16);
+ 	*index += 1 ;
+ 	navdemoData.num_frames |= (navdata_message[*index] << 24);
+ 	*index += 1 ;
 
  	//skip over all the other junk for right now
- 	ptr += 104;
+ 	*index += 104;
  }
 
- void parse_checksum(uint8_t *ptr) {
- 	ptr = NULL;
+ void parse_checksum(int *index) {
+	/*printf("before null %x\n", ptr);*/
+ 	*index = -1;
+ 	/*printf("after null %x\n", ptr);*/
  }
+
+ float getVx() {
+	return navdemoData.vx;
+ }
+
+ float getVy() {
+	 return navdemoData.vy;
+ }
+

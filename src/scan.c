@@ -34,6 +34,7 @@ double Now() {
 }
 
 void scanSonar(double lastMeasurement[]) {
+	//printf("inside scanSoanr");
 	StartTime = Now();
 
 	lastMeasurement[0] = -1.0;

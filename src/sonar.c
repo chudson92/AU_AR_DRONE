@@ -99,11 +99,11 @@ int ECHO_PIN[5] = { 18, 17, 27, 22, 23 };
       else
       {
          /* sensor not firing code */
-         printf("error, ");
+         //printf("error, ");
       }
 
    }
-                   printf("\n");
+                   //printf("\n");
  }
 
  break;

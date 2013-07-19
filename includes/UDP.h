@@ -53,21 +53,27 @@ static struct sockaddr_in
 
 static float forwardPower = -.15;
 static float rotPower = -.5;
+static float tilt_left = -.3;
+static float tilt_right = .3;
 
 void setup(void);
 void navdata_write(char *command);
 void navdata_read(void);
 void get_Navdata_demo(void);
  void forward();
+ void left();
+ void right();
  void hover();
  void rotate();
  void land();
  void watchDog();
  void takeoff();
- void parse_checksum(uint8_t *ptr);
- void parse_navdemo(uint8_t *ptr);
- void getNextOption(uint8_t *ptr);
- int parse_navdata();
-
+ void parse_checksum(int *_index);
+ void parse_navdemo(int *_index);
+ void getNextOption(int *_index);
+ void parse_navdata();
+ void calib_magneto();
+ float getVx();
+ float getVy();
 
 #endif /* UDP_H_ */

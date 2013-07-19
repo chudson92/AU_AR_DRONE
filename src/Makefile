@@ -21,7 +21,7 @@ CPPSOURCES=AR_DRONE.cpp Controler.cpp  diagnostics.cpp \
 CPPOBJECTS=$(CPPSOURCES:.cpp=.o)
 
 # All .c source and object files
-CSOURCES=client.c scan.c sonar.c
+CSOURCES=scan.c sonar.c UDP.c
 COBJECTS=$(CSOURCES:.c=.o)
 
 # Location of the source files in relation to the Makefile. Separate multiple
